@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Rocket Motor Test Stand ESP8266/HX711 %EVENTS%</h2>
+
+<form action="/tare" method="post">
+<b>Tare (null) load cell:  </b> <input type="submit" value="Tare (null) load cell">
+</form>
+<br>
+<form action="/calibrate" method="post">
+<b>Calibrate with known weight:</b><br>
+Put known weight on the load cell - enter the known weight into the box: <br>
+<input type="number" step=0.01 name="Mkg" value=%MKG%>kg
+<input type="submit" value="Calibrate Weight">
+</form>
+<br>
+<form action="/calibfactor" method="post">
+<b>Or enter Calibration factor directly:</b><br>
+<input type="number" step=0.01 name="CFa" value=%SCALE%>points/N
+<input type="submit" value="Calibrate Factor">
+</form>
+<br>
+<form action="/testread" method="post">
+<b>Test reading X values - NO fire: </b><br>
+Number of values to read:
+  <select name="Num">
+    <option value="20">20</option>
+    <option value="100">100</option>
+    <option value="800" selected>800</option>
+  </select>
+  <input type="submit" value="Test reading">
+</form>
+<br>
+<form action="/fireinthehole" method="post">
+<b>Hot reading X values FIRE IN THE HOLE!: </b><br>
+Number of values to read:
+  <select name="Num">
+    <option value="20">20</option>
+    <option value="100">100</option>
+    <option value="800" selected>800</option>
+  </select>
+  <br> Answer the security question:
+  <input type="number" step=1 name="ANS" min=0 max=99>
+  <input type="submit" value="FIRE IN THE HOLE!">
+</form>
+<br>
+
+<b>Current time and value: <p id="AjaxMeasurement">Update</p></b>
+
+<button type="button" onclick="loadDoc()">Update content once</button>
+<button onclick="myFunction()">Start periodic 3s update</button>
+
+<script>
+function myFunction() {
+    setInterval(loadDoc(), 3000);
+}
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("AjaxMeasurement").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "update.txt", true);
+  xhttp.send();
+}
+</script>
+
+<br>
+<b>Graph</b><br>
+<img src="/graph.svg">
+
+</body>
+</html>
